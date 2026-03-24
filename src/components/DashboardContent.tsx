@@ -1,4 +1,4 @@
-import { Settings, ArrowLeft, ArrowRight, UserPlus, X, Eye, ChevronDown } from "lucide-react";
+import { Settings, ArrowLeft, ArrowRight, UserPlus, X, Eye, ChevronDown, ClipboardList, CheckSquare, User, DollarSign, FileText, BarChart3, type LucideIcon } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const pieData = [
@@ -44,16 +44,16 @@ const DashboardContent = () => {
 
       {/* Dashboard Cards - Row 1 */}
       <div className="mx-6 grid grid-cols-3 gap-4 mb-4">
-        <DashboardCard color="bg-portal-blue" title="Employment Info" icon="📋" />
-        <DashboardCard color="bg-portal-green" title="Plans" icon="☑️" />
-        <DashboardCard color="bg-portal-purple" title="Personal Profile" icon="👤" />
+        <DashboardCard color="bg-portal-blue" title="Employment Info" Icon={ClipboardList} />
+        <DashboardCard color="bg-portal-green" title="Plans" Icon={CheckSquare} />
+        <DashboardCard color="bg-portal-purple" title="Personal Profile" Icon={User} />
       </div>
 
       {/* Dashboard Cards - Row 2 */}
       <div className="mx-6 grid grid-cols-3 gap-4 mb-6">
-        <DashboardCard color="bg-portal-orange" title="Benefit Estimates" icon="💲" />
-        <DashboardCard color="bg-portal-red" title="Service Purchase Contracts" icon="📄" />
-        <DashboardCard color="bg-portal-purple" title="Annual Statements" icon="📊" />
+        <DashboardCard color="bg-portal-orange" title="Benefit Estimates" Icon={DollarSign} />
+        <DashboardCard color="bg-portal-red" title="Service Purchase Contracts" Icon={FileText} />
+        <DashboardCard color="bg-portal-purple" title="Annual Statements" Icon={BarChart3} />
       </div>
 
       {/* Bottom section: Progress, Pie Chart, Bar Chart */}
@@ -140,10 +140,10 @@ const DashboardContent = () => {
   );
 };
 
-const DashboardCard = ({ color, title, icon }: { color: string; title: string; icon: string }) => (
+const DashboardCard = ({ color, title, Icon }: { color: string; title: string; Icon: LucideIcon }) => (
   <div className={`${color} text-primary-foreground rounded-sm relative overflow-hidden h-[90px] flex flex-col justify-between`}>
     <div className="flex items-center justify-between p-3 flex-1">
-      <span className="text-3xl opacity-80">{icon}</span>
+      <Icon size={36} className="opacity-80" />
       <span className="text-lg font-bold text-right">{title}</span>
     </div>
     <div className="flex items-center justify-between px-3 py-1.5 bg-[rgba(0,0,0,0.15)]">

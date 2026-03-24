@@ -140,10 +140,10 @@ const DashboardContent = () => {
   );
 };
 
-const DashboardCard = ({ color, title, icon }: { color: string; title: string; icon: string }) => (
+const DashboardCard = ({ color, title, Icon }: { color: string; title: string; Icon: LucideIcon }) => (
   <div className={`${color} text-primary-foreground rounded-sm relative overflow-hidden h-[90px] flex flex-col justify-between`}>
     <div className="flex items-center justify-between p-3 flex-1">
-      <span className="text-3xl opacity-80">{icon}</span>
+      <Icon size={36} className="opacity-80" />
       <span className="text-lg font-bold text-right">{title}</span>
     </div>
     <div className="flex items-center justify-between px-3 py-1.5 bg-[rgba(0,0,0,0.15)]">

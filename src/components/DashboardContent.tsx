@@ -1,4 +1,4 @@
-import { Settings, ArrowLeft, ArrowRight, UserPlus, X, Eye, ChevronDown } from "lucide-react";
+import { Settings, ArrowLeft, ArrowRight, UserPlus, X, Eye, ChevronDown, ClipboardList, CheckSquare, User, DollarSign, FileText, BarChart3, type LucideIcon } from "lucide-react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 const pieData = [

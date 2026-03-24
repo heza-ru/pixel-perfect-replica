@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Bell, Search, ChevronDown, User, Settings, LogOut } from 'lucide-react';
+import { Bell, Search, ChevronDown, User, Settings, LogOut, Home, Edit, Lock, Volume2 } from 'lucide-react';
 import { NavigateFn } from '@/types/navigation';
 import {
   DropdownMenu,
@@ -43,24 +43,24 @@ const AdminHeader = ({ navigate }: AdminHeaderProps) => {
   };
 
   return (
-    <header className="bg-portal-header text-primary-foreground h-[56px] flex items-center px-6 gap-4 z-10 shadow-sm">
+    <header className="bg-portal-header text-primary-foreground h-[45px] flex items-center px-4 gap-3">
       {/* Brand */}
-      <div className="flex items-center gap-3 flex-shrink-0">
-        <img src="/neospin-new.png" alt="Neospin" className="h-7 w-auto" />
-        <span className="text-[hsl(0,0%,50%)] text-sm">|</span>
-        <span className="text-[hsl(0,0%,65%)] text-sm font-normal">Administration Portal</span>
+      <div className="flex items-center gap-2 flex-shrink-0">
+        <img src="/neospin-new.png" alt="Neospin" className="h-6 w-auto" />
+        <span className="text-portal-red text-sm">|</span>
+        <span className="text-portal-red text-sm">Administration Portal</span>
       </div>
 
       {/* Global Search */}
-      <div className="relative ml-6 flex-shrink-0">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[hsl(0,0%,50%)]" />
+      <div className="relative ml-4 flex-shrink-0">
+        <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[hsl(0,0%,50%)]" />
         <input
           type="text"
-          placeholder="Search members, tasks, reports..."
+          placeholder="Search members, tasks..."
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           onKeyDown={handleSearch}
-          className="bg-[hsl(0,0%,28%)] text-primary-foreground placeholder-[hsl(0,0%,50%)] border border-[hsl(0,0%,35%)] rounded pl-8 pr-4 py-1.5 text-sm w-72 focus:outline-none focus:border-portal-blue focus:bg-[hsl(0,0%,30%)]"
+          className="bg-[hsl(0,0%,28%)] text-primary-foreground placeholder-[hsl(0,0%,50%)] border border-[hsl(0,0%,35%)] rounded pl-7 pr-3 py-1 text-xs w-56 focus:outline-none focus:border-portal-blue"
         />
       </div>
 
@@ -70,9 +70,9 @@ const AdminHeader = ({ navigate }: AdminHeaderProps) => {
       <div className="relative">
         <button
           onClick={() => setShowNotifications(!showNotifications)}
-          className="relative flex items-center justify-center w-9 h-9 rounded hover:bg-[hsl(0,0%,30%)] transition-colors"
+          className="relative flex items-center justify-center w-9 h-9 rounded-sm hover:bg-[hsl(0,0%,30%)] transition-colors"
         >
-          <Bell size={18} />
+          <Bell size={16} />
           <span className="absolute top-1 right-1 bg-portal-red text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
             2
           </span>
@@ -114,12 +114,12 @@ const AdminHeader = ({ navigate }: AdminHeaderProps) => {
       {/* User Profile */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button className="flex items-center gap-2 px-3 py-1.5 rounded hover:bg-[hsl(0,0%,30%)] transition-colors">
-            <div className="w-7 h-7 rounded-full bg-portal-blue flex items-center justify-center text-xs font-bold">
+          <button className="flex items-center gap-1.5 px-2 py-1 rounded-sm hover:bg-[hsl(0,0%,30%)] transition-colors">
+            <div className="w-6 h-6 rounded-full bg-portal-blue flex items-center justify-center text-[10px] font-bold">
               JA
             </div>
-            <span className="text-sm font-medium">Jessica Adams</span>
-            <ChevronDown size={14} className="text-[hsl(0,0%,60%)]" />
+            <span className="text-xs font-medium">Jessica Adams</span>
+            <ChevronDown size={12} className="text-[hsl(0,0%,60%)]" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
@@ -140,8 +140,27 @@ const AdminHeader = ({ navigate }: AdminHeaderProps) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {/* Colored icon buttons — original style */}
+      <div className="flex items-center gap-1 ml-2">
+        <HeaderButton color="bg-portal-green" onClick={() => navigate('dashboard')}><Home size={16} /></HeaderButton>
+        <HeaderButton color="bg-portal-orange" onClick={() => {}}><Edit size={16} /></HeaderButton>
+        <HeaderButton color="bg-portal-blue" onClick={() => {}}><User size={16} /></HeaderButton>
+        <HeaderButton color="bg-portal-purple" onClick={() => {}}><Lock size={16} /></HeaderButton>
+        <HeaderButton color="bg-portal-magenta" onClick={() => {}}><Volume2 size={16} /></HeaderButton>
+        <HeaderButton color="bg-portal-red" onClick={() => {}}><LogOut size={16} /></HeaderButton>
+      </div>
     </header>
   );
 };
+
+const HeaderButton = ({ color, children, onClick }: { color: string; children: React.ReactNode; onClick: () => void }) => (
+  <button
+    onClick={onClick}
+    className={`${color} text-primary-foreground w-9 h-9 flex items-center justify-center rounded-sm hover:opacity-80`}
+  >
+    {children}
+  </button>
+);
 
 export default AdminHeader;

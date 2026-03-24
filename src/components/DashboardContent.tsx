@@ -44,9 +44,9 @@ const DashboardContent = () => {
 
       {/* Dashboard Cards - Row 1 */}
       <div className="mx-6 grid grid-cols-3 gap-4 mb-4">
-        <DashboardCard color="bg-portal-blue" title="Employment Info" icon="📋" />
-        <DashboardCard color="bg-portal-green" title="Plans" icon="☑️" />
-        <DashboardCard color="bg-portal-purple" title="Personal Profile" icon="👤" />
+        <DashboardCard color="bg-portal-blue" title="Employment Info" Icon={ClipboardList} />
+        <DashboardCard color="bg-portal-green" title="Plans" Icon={CheckSquare} />
+        <DashboardCard color="bg-portal-purple" title="Personal Profile" Icon={User} />
       </div>
 
       {/* Dashboard Cards - Row 2 */}

@@ -51,9 +51,9 @@ const DashboardContent = () => {
 
       {/* Dashboard Cards - Row 2 */}
       <div className="mx-6 grid grid-cols-3 gap-4 mb-6">
-        <DashboardCard color="bg-portal-orange" title="Benefit Estimates" icon="💲" />
-        <DashboardCard color="bg-portal-red" title="Service Purchase Contracts" icon="📄" />
-        <DashboardCard color="bg-portal-purple" title="Annual Statements" icon="📊" />
+        <DashboardCard color="bg-portal-orange" title="Benefit Estimates" Icon={DollarSign} />
+        <DashboardCard color="bg-portal-red" title="Service Purchase Contracts" Icon={FileText} />
+        <DashboardCard color="bg-portal-purple" title="Annual Statements" Icon={BarChart3} />
       </div>
 
       {/* Bottom section: Progress, Pie Chart, Bar Chart */}

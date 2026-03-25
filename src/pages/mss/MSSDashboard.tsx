@@ -29,7 +29,7 @@ import {
 
 const contributionPieData = [
   { name: 'Non-Taxable (Member)', value: 148.28 },
-  { name: 'Taxable Amount', value: 38758.11 },
+  { name: 'Taxable Amount', value: 4674.86 },
 ];
 
 const paymentHistoryData = [
@@ -219,7 +219,7 @@ const MSSDashboard = () => {
         {/* Contribution Summary */}
         <div id="mss-chart-contribution-summary" className="bg-white rounded shadow-sm border p-4">
           <div className="text-sm font-semibold text-foreground mb-1">Contribution Summary</div>
-          <div className="text-xs text-muted-foreground mb-3">Available Balance :$582.41</div>
+          <div className="text-xs text-muted-foreground mb-3">Available Balance: $4,823.14</div>
 
           <div role="list" aria-label="Contribution chart legend" className="flex items-center gap-3 mb-2 text-xs">
             <span role="listitem" className="flex items-center gap-1">
@@ -228,7 +228,7 @@ const MSSDashboard = () => {
             </span>
             <span role="listitem" className="flex items-center gap-1">
               <span aria-hidden="true" className="w-3 h-3 rounded-full bg-portal-orange inline-block" />
-              Taxable ($38,758.11)
+              Taxable ($4,674.86)
             </span>
           </div>
 

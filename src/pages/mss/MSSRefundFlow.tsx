@@ -153,11 +153,11 @@ const Step2 = ({ onNext }: { onNext: () => void }) => (
     <table className="w-full text-sm border rounded overflow-hidden mb-4">
       <tbody>
         {[
-          ['Employee Total Contributions', '$38,906.39'],
-          ['Taxable Amount', '$38,758.11'],
+          ['Employee Total Contributions', '$4,823.14'],
+          ['Taxable Amount', '$4,674.86'],
           ['Non-Taxable Amount (Member)', '$148.28'],
           ['Interest Earned', '$0.00'],
-          ['Eligible Refund Amount', '$38,906.39'],
+          ['Eligible Refund Amount', '$4,823.14'],
         ].map(([label, value]) => (
           <tr key={label} className="border-b even:bg-[hsl(0,0%,97%)]">
             <td className="px-4 py-2.5 text-muted-foreground">{label}</td>
@@ -492,7 +492,7 @@ const Step6 = ({ payout }: { payout: string }) => {
         <p className="text-sm font-semibold mb-2">Application Summary</p>
         <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm">
           <span className="text-muted-foreground">Refund Amount</span>
-          <span className="font-semibold">$38,906.39</span>
+          <span className="font-semibold">$4,823.14</span>
           <span className="text-muted-foreground">Payout Method</span>
           <span className="font-semibold">{payout === 'ira' ? 'IRA Rollover' : 'Direct Bank Transfer'}</span>
           <span className="text-muted-foreground">Bank Account</span>

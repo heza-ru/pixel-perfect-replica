@@ -34,6 +34,9 @@ import PayrollRemittances from "./pages/esers/PayrollRemittances.tsx";
 import AgencyStatement from "./pages/esers/AgencyStatement.tsx";
 import UploadFiles from "./pages/esers/UploadFiles.tsx";
 import ProcessedFiles from "./pages/esers/ProcessedFiles.tsx";
+import Contacts from "./pages/esers/Contacts.tsx";
+import Bank from "./pages/esers/Bank.tsx";
+import EmploymentChangeFile from "./pages/esers/EmploymentChangeFile.tsx";
 
 const queryClient = new QueryClient();
 
@@ -67,7 +70,10 @@ const App = () => (
             <Route path="organization" element={<Organization />} />
             <Route path="employees" element={<Employees />} />
             <Route path="enrollment" element={<Enrollment />} />
+            <Route path="contacts" element={<Contacts />} />
+            <Route path="bank" element={<Bank />} />
             <Route path="employment-change" element={<EmploymentChange />} />
+            <Route path="employment-change-file" element={<EmploymentChangeFile />} />
             <Route path="meetings" element={<Meetings />} />
             <Route path="payroll-header" element={<PayrollHeader />} />
             <Route path="payroll-details" element={<PayrollDetails />} />

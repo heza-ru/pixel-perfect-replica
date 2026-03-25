@@ -42,24 +42,31 @@ const MemberPortal = ({ navigate, filterType }: MemberPortalProps) => {
   });
 
   return (
-    <div className="p-6">
+    <div id="member-portal-page" data-testid="member-portal-page" className="p-6">
+
       {/* Page header */}
-      <div className="flex items-center justify-between mb-6">
+      <div id="member-portal-header" className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-light text-foreground">{baseTitle}</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">{baseSubtitle}</p>
+          <h1 id="member-portal-title" className="text-2xl font-light text-foreground">{baseTitle}</h1>
+          <p id="member-portal-subtitle" className="text-sm text-muted-foreground mt-0.5">{baseSubtitle}</p>
         </div>
-        <Button size="sm">
-          <UserPlus size={14} className="mr-1.5" /> Add Member
+        <Button
+          id="member-add-btn"
+          aria-label="Add a new member"
+          size="sm"
+        >
+          <UserPlus size={14} className="mr-1.5" aria-hidden="true" /> Add Member
         </Button>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded border border-border p-3 mb-4 flex items-center gap-3">
+      <div id="member-filters-bar" role="search" aria-label="Filter members" className="bg-white rounded border border-border p-3 mb-4 flex items-center gap-3">
         <div className="relative flex-1 max-w-xs">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
           <input
-            type="text"
+            id="member-search-input"
+            type="search"
+            aria-label="Search by name, ID, or employer"
             placeholder="Search by name, ID, or employer..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -67,10 +74,12 @@ const MemberPortal = ({ navigate, filterType }: MemberPortalProps) => {
           />
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Filter size={14} />
+          <Filter size={14} aria-hidden="true" />
           <span>Filter:</span>
         </div>
         <select
+          id="member-status-filter"
+          aria-label="Filter by member status"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
           className="text-sm border border-border rounded px-2 py-1.5 focus:outline-none focus:border-portal-blue bg-white"
@@ -81,6 +90,8 @@ const MemberPortal = ({ navigate, filterType }: MemberPortalProps) => {
           <option value="Retired">Retired</option>
         </select>
         <select
+          id="member-plan-filter"
+          aria-label="Filter by plan type"
           value={planFilter}
           onChange={(e) => setPlanFilter(e.target.value)}
           className="text-sm border border-border rounded px-2 py-1.5 focus:outline-none focus:border-portal-blue bg-white"
@@ -89,44 +100,61 @@ const MemberPortal = ({ navigate, filterType }: MemberPortalProps) => {
           <option value="Defined Benefit">Defined Benefit</option>
           <option value="Defined Contribution">Defined Contribution</option>
         </select>
-        <span className="ml-auto text-xs text-muted-foreground">{filtered.length} members</span>
+        <span id="member-results-count" aria-live="polite" aria-label={`${filtered.length} members found`} className="ml-auto text-xs text-muted-foreground">
+          {filtered.length} members
+        </span>
       </div>
 
       {/* Members Table */}
       <div className="bg-white rounded border border-border overflow-hidden">
-        <table className="w-full text-sm">
+        <table id="members-table" role="table" aria-label="Members list" className="w-full text-sm">
           <thead>
             <tr className="bg-muted/50 border-b">
-              <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Member ID</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Full Name</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Employer</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Plan Type</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Join Date</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Actions</th>
+              <th scope="col" className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Member ID</th>
+              <th scope="col" className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Full Name</th>
+              <th scope="col" className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Employer</th>
+              <th scope="col" className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Plan Type</th>
+              <th scope="col" className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</th>
+              <th scope="col" className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Join Date</th>
+              <th scope="col" className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 && (
-              <tr>
+              <tr id="members-table-empty">
                 <td colSpan={7} className="text-center py-10 text-muted-foreground">
                   No members match the current filters.
                 </td>
               </tr>
             )}
             {filtered.map((member) => (
-              <tr key={member.id} className="border-b hover:bg-muted/20 transition-colors">
+              <tr
+                key={member.id}
+                id={`member-row-${member.id}`}
+                data-testid={`member-row-${member.id}`}
+                aria-label={`Member: ${member.name}`}
+                className="border-b hover:bg-muted/20 transition-colors"
+              >
                 <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{member.id}</td>
                 <td className="px-4 py-3 font-medium">{member.name}</td>
                 <td className="px-4 py-3 text-muted-foreground">{member.employer}</td>
                 <td className="px-4 py-3 text-muted-foreground">{member.planType}</td>
                 <td className="px-4 py-3">
-                  <Badge variant={statusVariant(member.status)}>{member.status}</Badge>
+                  <Badge
+                    id={`member-status-${member.id}`}
+                    aria-label={`Status: ${member.status}`}
+                    variant={statusVariant(member.status)}
+                  >
+                    {member.status}
+                  </Badge>
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">{member.joinDate}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <Button
+                      id={`member-view-profile-btn-${member.id}`}
+                      aria-label={`View profile for ${member.name}`}
+                      data-testid={`view-profile-btn-${member.id}`}
                       variant="outline"
                       size="sm"
                       className="h-7 text-xs"
@@ -135,6 +163,9 @@ const MemberPortal = ({ navigate, filterType }: MemberPortalProps) => {
                       View Profile
                     </Button>
                     <Button
+                      id={`member-refund-btn-${member.id}`}
+                      aria-label={`Start refund application for ${member.name}`}
+                      data-testid={`refund-btn-${member.id}`}
                       variant="ghost"
                       size="sm"
                       className="h-7 text-xs text-portal-blue hover:text-portal-blue"

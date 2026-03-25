@@ -35,7 +35,6 @@ const STEPS = [
 const RefundFlow = ({ memberId, navigate }: RefundFlowProps) => {
   const [step, setStep] = useState(1);
   const member = members.find((m) => m.id === memberId);
-
   const latestContrib = member?.contributions[member.contributions.length - 1];
 
   const [form, setForm] = useState<RefundFormData>({
@@ -58,10 +57,10 @@ const RefundFlow = ({ memberId, navigate }: RefundFlowProps) => {
 
   if (!member) {
     return (
-      <div className="p-6">
+      <div id="refund-flow-not-found" className="p-6">
         <div className="bg-white rounded border border-border p-8 text-center">
           <p className="text-muted-foreground mb-4">Member not found.</p>
-          <Button variant="outline" onClick={() => navigate('members')}>
+          <Button id="refund-not-found-back-btn" aria-label="Back to Member Portal" variant="outline" onClick={() => navigate('members')}>
             <ArrowLeft size={14} className="mr-1.5" /> Back
           </Button>
         </div>
@@ -70,65 +69,63 @@ const RefundFlow = ({ memberId, navigate }: RefundFlowProps) => {
   }
 
   return (
-    <div className="p-6">
-      {/* Back */}
+    <div id="refund-flow-page" data-testid="refund-flow-page" className="p-6">
+
       <button
+        id="refund-back-link"
+        aria-label={`Back to ${member.name}'s profile`}
         onClick={() => navigate('member-profile', member.id)}
         className="flex items-center gap-1.5 text-sm text-portal-blue hover:underline mb-5"
       >
-        <ArrowLeft size={14} /> Back to {member.name}
+        <ArrowLeft size={14} aria-hidden="true" /> Back to {member.name}
       </button>
 
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-xl font-semibold mb-1">Refund Application</h1>
-        <p className="text-sm text-muted-foreground mb-6">
+        <h1 id="refund-flow-title" className="text-xl font-semibold mb-1">Refund Application</h1>
+        <p id="refund-flow-member-info" className="text-sm text-muted-foreground mb-6">
           Member: <span className="font-medium text-foreground">{member.name}</span> &middot; {member.id}
         </p>
 
         {/* Stepper */}
-        <div className="flex items-center mb-8">
+        <div id="refund-stepper" role="list" aria-label="Refund application steps" className="flex items-center mb-8">
           {STEPS.map((s, i) => (
-            <div key={s.num} className="flex items-center flex-1 last:flex-none">
+            <div key={s.num} id={`refund-step-${s.num}`} role="listitem" aria-label={`Step ${s.num}: ${s.label}${step === s.num ? ' (current)' : step > s.num ? ' (completed)' : ''}`} className="flex items-center flex-1 last:flex-none">
               <div className="flex flex-col items-center">
                 <div
+                  aria-current={step === s.num ? 'step' : undefined}
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
-                    step > s.num
-                      ? 'bg-portal-green text-white'
-                      : step === s.num
-                      ? 'bg-portal-blue text-white'
-                      : 'bg-muted text-muted-foreground'
+                    step > s.num ? 'bg-portal-green text-white' : step === s.num ? 'bg-portal-blue text-white' : 'bg-muted text-muted-foreground'
                   }`}
                 >
-                  {step > s.num ? <Check size={14} /> : s.num}
+                  {step > s.num ? <Check size={14} aria-hidden="true" /> : s.num}
                 </div>
-                <span
-                  className={`text-[10px] mt-1 text-center w-20 ${
-                    step === s.num ? 'text-portal-blue font-semibold' : 'text-muted-foreground'
-                  }`}
-                >
+                <span className={`text-[10px] mt-1 text-center w-20 ${step === s.num ? 'text-portal-blue font-semibold' : 'text-muted-foreground'}`}>
                   {s.label}
                 </span>
               </div>
               {i < STEPS.length - 1 && (
-                <div className={`flex-1 h-0.5 mx-2 mb-4 ${step > s.num ? 'bg-portal-green' : 'bg-muted'}`} />
+                <div className={`flex-1 h-0.5 mx-2 mb-4 ${step > s.num ? 'bg-portal-green' : 'bg-muted'}`} aria-hidden="true" />
               )}
             </div>
           ))}
         </div>
 
         {/* Step Content */}
-        <div className="bg-white rounded border border-border">
+        <div id={`refund-step-${step}-content`} className="bg-white rounded border border-border">
           <div className="px-6 py-4 border-b bg-muted/30">
-            <h2 className="font-semibold text-sm">
+            <h2 id="refund-step-heading" className="font-semibold text-sm">
               Step {step}: {STEPS[step - 1].label}
             </h2>
           </div>
           <div className="p-6">
+
             {step === 1 && (
-              <div className="space-y-5">
+              <div id="refund-step1-form" className="space-y-5">
                 <div>
-                  <Label>Contribution Year</Label>
+                  <Label htmlFor="refund-year-select">Contribution Year</Label>
                   <select
+                    id="refund-year-select"
+                    aria-label="Select contribution year for refund"
                     value={form.contributionYear}
                     onChange={(e) => update('contributionYear', e.target.value)}
                     className="mt-1.5 w-full border border-border rounded px-3 py-2 text-sm focus:outline-none focus:border-portal-blue bg-white"
@@ -137,13 +134,13 @@ const RefundFlow = ({ memberId, navigate }: RefundFlowProps) => {
                       <option key={c.year} value={String(c.year)}>{c.year}</option>
                     ))}
                   </select>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Select the year from which you would like to receive a refund.
-                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">Select the year from which you would like to receive a refund.</p>
                 </div>
                 <div>
-                  <Label>Refund Amount ($)</Label>
+                  <Label htmlFor="refund-amount-input">Refund Amount ($)</Label>
                   <Input
+                    id="refund-amount-input"
+                    aria-label="Enter refund amount in dollars"
                     type="number"
                     value={form.refundAmount}
                     onChange={(e) => update('refundAmount', e.target.value)}
@@ -163,22 +160,22 @@ const RefundFlow = ({ memberId, navigate }: RefundFlowProps) => {
             )}
 
             {step === 2 && (
-              <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Confirm the mailing address where you would like the refund check sent.
-                </p>
+              <div id="refund-step2-form" className="space-y-4">
+                <p className="text-sm text-muted-foreground">Confirm the mailing address where you would like the refund check sent.</p>
                 <div>
-                  <Label>Street Address</Label>
-                  <Input value={form.street} onChange={(e) => update('street', e.target.value)} className="mt-1.5" />
+                  <Label htmlFor="refund-street-input">Street Address</Label>
+                  <Input id="refund-street-input" aria-label="Street address" value={form.street} onChange={(e) => update('street', e.target.value)} className="mt-1.5" />
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <Label>City</Label>
-                    <Input value={form.city} onChange={(e) => update('city', e.target.value)} className="mt-1.5" />
+                    <Label htmlFor="refund-city-input">City</Label>
+                    <Input id="refund-city-input" aria-label="City" value={form.city} onChange={(e) => update('city', e.target.value)} className="mt-1.5" />
                   </div>
                   <div>
-                    <Label>State</Label>
+                    <Label htmlFor="refund-state-select">State</Label>
                     <select
+                      id="refund-state-select"
+                      aria-label="Select state"
                       value={form.state}
                       onChange={(e) => update('state', e.target.value)}
                       className="mt-1.5 w-full border border-border rounded px-3 py-2 text-sm focus:outline-none focus:border-portal-blue bg-white"
@@ -189,38 +186,40 @@ const RefundFlow = ({ memberId, navigate }: RefundFlowProps) => {
                     </select>
                   </div>
                   <div>
-                    <Label>ZIP Code</Label>
-                    <Input value={form.zip} onChange={(e) => update('zip', e.target.value)} className="mt-1.5" />
+                    <Label htmlFor="refund-zip-input">ZIP Code</Label>
+                    <Input id="refund-zip-input" aria-label="ZIP code" value={form.zip} onChange={(e) => update('zip', e.target.value)} className="mt-1.5" />
                   </div>
                 </div>
               </div>
             )}
 
             {step === 3 && (
-              <div className="space-y-5">
+              <div id="refund-step3-form" className="space-y-5">
                 <div>
                   <Label className="text-sm font-medium">Payment Method</Label>
-                  <div className="mt-2 space-y-2">
-                    <label className="flex items-center gap-3 p-3 border rounded cursor-pointer hover:bg-muted/20">
+                  <div id="refund-bank-options" role="radiogroup" aria-label="Select payment method" className="mt-2 space-y-2">
+                    <label id="refund-bank-option-existing-label" htmlFor="refund-bank-option-existing" className={`flex items-center gap-3 p-3 border rounded cursor-pointer hover:bg-muted/20 ${form.bankOption === 'existing' ? 'border-portal-blue bg-blue-50' : ''}`}>
                       <input
+                        id="refund-bank-option-existing"
                         type="radio"
                         name="bankOption"
                         value="existing"
+                        aria-label="Use existing bank account"
                         checked={form.bankOption === 'existing'}
                         onChange={() => update('bankOption', 'existing')}
                       />
                       <div>
                         <div className="text-sm font-medium">Use existing bank account</div>
-                        <div className="text-xs text-muted-foreground">
-                          {member.bank.name} — Account {member.bank.accountMasked}
-                        </div>
+                        <div className="text-xs text-muted-foreground">{member.bank.name} — Account {member.bank.accountMasked}</div>
                       </div>
                     </label>
-                    <label className="flex items-center gap-3 p-3 border rounded cursor-pointer hover:bg-muted/20">
+                    <label id="refund-bank-option-new-label" htmlFor="refund-bank-option-new" className={`flex items-center gap-3 p-3 border rounded cursor-pointer hover:bg-muted/20 ${form.bankOption === 'new' ? 'border-portal-blue bg-blue-50' : ''}`}>
                       <input
+                        id="refund-bank-option-new"
                         type="radio"
                         name="bankOption"
                         value="new"
+                        aria-label="Enter new bank account details"
                         checked={form.bankOption === 'new'}
                         onChange={() => update('bankOption', 'new')}
                       />
@@ -229,36 +228,18 @@ const RefundFlow = ({ memberId, navigate }: RefundFlowProps) => {
                   </div>
                 </div>
                 {form.bankOption === 'new' && (
-                  <div className="space-y-4 pt-2 border-t">
+                  <div id="refund-new-bank-fields" className="space-y-4 pt-2 border-t">
                     <div>
-                      <Label>Routing Number</Label>
-                      <Input
-                        value={form.routingNumber}
-                        onChange={(e) => update('routingNumber', e.target.value)}
-                        className="mt-1.5"
-                        placeholder="9-digit routing number"
-                        maxLength={9}
-                      />
+                      <Label htmlFor="refund-routing-input">Routing Number</Label>
+                      <Input id="refund-routing-input" aria-label="Bank routing number" value={form.routingNumber} onChange={(e) => update('routingNumber', e.target.value)} className="mt-1.5" placeholder="9-digit routing number" maxLength={9} />
                     </div>
                     <div>
-                      <Label>Account Number</Label>
-                      <Input
-                        type="password"
-                        value={form.accountNumber}
-                        onChange={(e) => update('accountNumber', e.target.value)}
-                        className="mt-1.5"
-                        placeholder="Account number"
-                      />
+                      <Label htmlFor="refund-account-input">Account Number</Label>
+                      <Input id="refund-account-input" aria-label="Bank account number" type="password" value={form.accountNumber} onChange={(e) => update('accountNumber', e.target.value)} className="mt-1.5" placeholder="Account number" />
                     </div>
                     <div>
-                      <Label>Confirm Account Number</Label>
-                      <Input
-                        type="password"
-                        value={form.confirmAccount}
-                        onChange={(e) => update('confirmAccount', e.target.value)}
-                        className="mt-1.5"
-                        placeholder="Re-enter account number"
-                      />
+                      <Label htmlFor="refund-confirm-account-input">Confirm Account Number</Label>
+                      <Input id="refund-confirm-account-input" aria-label="Confirm bank account number" type="password" value={form.confirmAccount} onChange={(e) => update('confirmAccount', e.target.value)} className="mt-1.5" placeholder="Re-enter account number" />
                     </div>
                   </div>
                 )}
@@ -266,17 +247,17 @@ const RefundFlow = ({ memberId, navigate }: RefundFlowProps) => {
             )}
 
             {step === 4 && (
-              <div className="space-y-5">
+              <div id="refund-step4-review" className="space-y-5">
                 <p className="text-sm text-muted-foreground">Please review your refund application before submitting.</p>
-                <ReviewSection title="Refund Details">
+                <ReviewSection id="review-refund-details" title="Refund Details">
                   <ReviewRow label="Contribution Year" value={form.contributionYear} />
                   <ReviewRow label="Refund Amount" value={`$${Number(form.refundAmount).toLocaleString()}`} />
                 </ReviewSection>
-                <ReviewSection title="Mailing Address">
+                <ReviewSection id="review-address" title="Mailing Address">
                   <ReviewRow label="Street" value={form.street} />
                   <ReviewRow label="City / State / ZIP" value={`${form.city}, ${form.state} ${form.zip}`} />
                 </ReviewSection>
-                <ReviewSection title="Payment Method">
+                <ReviewSection id="review-payment" title="Payment Method">
                   {form.bankOption === 'existing' ? (
                     <>
                       <ReviewRow label="Bank" value={member.bank.name} />
@@ -295,26 +276,33 @@ const RefundFlow = ({ memberId, navigate }: RefundFlowProps) => {
             )}
 
             {step === 5 && (
-              <div className="text-center py-6">
-                <div className="w-16 h-16 rounded-full bg-portal-green flex items-center justify-center mx-auto mb-4">
+              <div id="refund-step5-confirmation" role="status" aria-live="polite" className="text-center py-6">
+                <div aria-hidden="true" className="w-16 h-16 rounded-full bg-portal-green flex items-center justify-center mx-auto mb-4">
                   <Check size={32} className="text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-1">Refund Application Submitted</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Your application has been received and is being processed.
-                </p>
-                <div className="bg-muted/50 rounded p-3 inline-block mb-6">
+                <h3 id="refund-confirmation-heading" className="text-lg font-semibold text-foreground mb-1">Refund Application Submitted</h3>
+                <p className="text-sm text-muted-foreground mb-4">Your application has been received and is being processed.</p>
+                <div id="refund-reference-number" aria-label={`Reference number: ${refNum}`} className="bg-muted/50 rounded p-3 inline-block mb-6">
                   <span className="text-xs text-muted-foreground">Reference Number: </span>
                   <span className="font-mono font-bold text-foreground">{refNum}</span>
                 </div>
                 <div className="text-xs text-muted-foreground mb-6">
                   Processing time: 5–10 business days. You will be notified by email at {member.email}.
                 </div>
-                <div className="flex justify-center gap-3">
-                  <Button variant="outline" onClick={() => navigate('member-profile', member.id)}>
+                <div id="refund-confirmation-actions" className="flex justify-center gap-3">
+                  <Button
+                    id="refund-back-to-profile-btn"
+                    aria-label={`Back to ${member.name}'s profile`}
+                    variant="outline"
+                    onClick={() => navigate('member-profile', member.id)}
+                  >
                     Back to Member Profile
                   </Button>
-                  <Button onClick={() => navigate('members')}>
+                  <Button
+                    id="refund-back-to-portal-btn"
+                    aria-label="Return to Member Portal"
+                    onClick={() => navigate('members')}
+                  >
                     Return to Member Portal
                   </Button>
                 </div>
@@ -324,14 +312,20 @@ const RefundFlow = ({ memberId, navigate }: RefundFlowProps) => {
 
           {/* Navigation */}
           {step < 5 && (
-            <div className="px-6 py-4 border-t bg-muted/20 flex justify-between">
+            <div id="refund-step-nav" className="px-6 py-4 border-t bg-muted/20 flex justify-between">
               <Button
+                id="refund-back-btn"
+                aria-label={step === 1 ? 'Cancel refund application' : 'Go to previous step'}
                 variant="outline"
                 onClick={() => (step === 1 ? navigate('member-profile', member.id) : setStep(step - 1))}
               >
                 {step === 1 ? 'Cancel' : 'Back'}
               </Button>
-              <Button onClick={() => setStep(step + 1)}>
+              <Button
+                id="refund-next-btn"
+                aria-label={step === 4 ? 'Submit refund application' : 'Go to next step'}
+                onClick={() => setStep(step + 1)}
+              >
                 {step === 4 ? 'Submit Refund' : 'Next'}
               </Button>
             </div>
@@ -342,8 +336,8 @@ const RefundFlow = ({ memberId, navigate }: RefundFlowProps) => {
   );
 };
 
-const ReviewSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <div>
+const ReviewSection = ({ id, title, children }: { id: string; title: string; children: React.ReactNode }) => (
+  <div id={id}>
     <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">{title}</h3>
     <div className="bg-muted/30 rounded border border-border p-3 space-y-2">{children}</div>
   </div>

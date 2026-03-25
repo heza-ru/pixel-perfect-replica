@@ -39,9 +39,7 @@ const WorkQueue = ({ navigate: _navigate }: WorkQueueProps) => {
   });
 
   const resolve = (id: string) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, status: 'Resolved' as const } : t))
-    );
+    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, status: 'Resolved' as const } : t)));
   };
 
   const assignTo = (id: string, assignee: string) => {
@@ -59,27 +57,35 @@ const WorkQueue = ({ navigate: _navigate }: WorkQueueProps) => {
   const escalatedCount = tasks.filter((t) => t.status === 'Escalated').length;
 
   return (
-    <div className="p-6">
+    <div id="work-queue-page" data-testid="work-queue-page" className="p-6">
+
       {/* Page header */}
-      <div className="flex items-center justify-between mb-5">
+      <div id="work-queue-header" className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-2xl font-light text-foreground">Work Queue</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
+          <h1 id="work-queue-title" className="text-2xl font-light text-foreground">Work Queue</h1>
+          <p id="work-queue-subtitle" aria-live="polite" className="text-sm text-muted-foreground mt-0.5">
             {openCount} open &middot; {escalatedCount} escalated
           </p>
         </div>
-        <Button size="sm">
-          <Plus size={14} className="mr-1.5" /> New Task
+        <Button
+          id="work-queue-new-task-btn"
+          aria-label="Create a new task"
+          data-testid="new-task-btn"
+          size="sm"
+        >
+          <Plus size={14} className="mr-1.5" aria-hidden="true" /> New Task
         </Button>
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded border border-border p-3 mb-4 flex items-center gap-3">
+      <div id="work-queue-filters" role="search" aria-label="Filter tasks" className="bg-white rounded border border-border p-3 mb-4 flex items-center gap-3">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Filter size={14} />
+          <Filter size={14} aria-hidden="true" />
           <span>Filter:</span>
         </div>
         <select
+          id="work-queue-status-filter"
+          aria-label="Filter tasks by status"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
           className="text-sm border border-border rounded px-2 py-1.5 focus:outline-none focus:border-portal-blue bg-white"
@@ -91,6 +97,8 @@ const WorkQueue = ({ navigate: _navigate }: WorkQueueProps) => {
           <option value="Resolved">Resolved</option>
         </select>
         <select
+          id="work-queue-priority-filter"
+          aria-label="Filter tasks by priority"
           value={priorityFilter}
           onChange={(e) => setPriorityFilter(e.target.value)}
           className="text-sm border border-border rounded px-2 py-1.5 focus:outline-none focus:border-portal-blue bg-white"
@@ -101,6 +109,8 @@ const WorkQueue = ({ navigate: _navigate }: WorkQueueProps) => {
           <option value="Low">Low</option>
         </select>
         <select
+          id="work-queue-assignee-filter"
+          aria-label="Filter tasks by assignee"
           value={assigneeFilter}
           onChange={(e) => setAssigneeFilter(e.target.value)}
           className="text-sm border border-border rounded px-2 py-1.5 focus:outline-none focus:border-portal-blue bg-white"
@@ -110,44 +120,63 @@ const WorkQueue = ({ navigate: _navigate }: WorkQueueProps) => {
             <option key={a} value={a}>{a}</option>
           ))}
         </select>
-        <span className="ml-auto text-xs text-muted-foreground">{filtered.length} tasks</span>
+        <span
+          id="work-queue-results-count"
+          aria-live="polite"
+          aria-label={`${filtered.length} tasks found`}
+          className="ml-auto text-xs text-muted-foreground"
+        >
+          {filtered.length} tasks
+        </span>
       </div>
 
       {/* Tasks Table */}
       <div className="bg-white rounded border border-border overflow-hidden">
-        <table className="w-full text-sm">
+        <table id="tasks-table" role="table" aria-label="Work queue tasks" className="w-full text-sm">
           <thead>
             <tr className="bg-muted/50 border-b">
-              <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Task ID</th>
-              <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Request Type</th>
-              <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Member / Entity</th>
-              <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</th>
-              <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Assigned To</th>
-              <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Priority</th>
-              <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Due Date</th>
-              <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Actions</th>
+              <th scope="col" className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Task ID</th>
+              <th scope="col" className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Request Type</th>
+              <th scope="col" className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Member / Entity</th>
+              <th scope="col" className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</th>
+              <th scope="col" className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Assigned To</th>
+              <th scope="col" className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Priority</th>
+              <th scope="col" className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Due Date</th>
+              <th scope="col" className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 && (
-              <tr>
-                <td colSpan={8} className="text-center py-10 text-muted-foreground">
-                  No tasks match the current filters.
-                </td>
+              <tr id="tasks-table-empty">
+                <td colSpan={8} className="text-center py-10 text-muted-foreground">No tasks match the current filters.</td>
               </tr>
             )}
             {filtered.map((task) => (
-              <tr key={task.id} className="border-b hover:bg-muted/20 transition-colors">
+              <tr
+                key={task.id}
+                id={`task-row-${task.id}`}
+                data-testid={`task-row-${task.id}`}
+                aria-label={`Task ${task.id}: ${task.requestType} for ${task.memberName}`}
+                className="border-b hover:bg-muted/20 transition-colors"
+              >
                 <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{task.id}</td>
                 <td className="px-4 py-3">{task.requestType}</td>
                 <td className="px-4 py-3 font-medium">{task.memberName}</td>
                 <td className="px-4 py-3">
-                  <Badge variant={statusVariant(task.status)}>{task.status}</Badge>
+                  <Badge
+                    id={`task-status-badge-${task.id}`}
+                    aria-label={`Task status: ${task.status}`}
+                    variant={statusVariant(task.status)}
+                  >
+                    {task.status}
+                  </Badge>
                 </td>
                 <td className="px-4 py-3">
                   {assigning === task.id ? (
-                    <div className="flex items-center gap-1.5">
+                    <div id={`task-assign-dropdown-${task.id}`} className="flex items-center gap-1.5">
                       <select
+                        id={`task-assignee-select-${task.id}`}
+                        aria-label={`Assign task ${task.id} to a team member`}
                         defaultValue={task.assignedTo}
                         onChange={(e) => assignTo(task.id, e.target.value)}
                         className="text-xs border border-border rounded px-1.5 py-1 focus:outline-none focus:border-portal-blue bg-white"
@@ -157,6 +186,8 @@ const WorkQueue = ({ navigate: _navigate }: WorkQueueProps) => {
                         ))}
                       </select>
                       <button
+                        id={`task-assign-cancel-${task.id}`}
+                        aria-label="Cancel assignment"
                         onClick={() => setAssigning(null)}
                         className="text-xs text-muted-foreground hover:text-foreground"
                       >
@@ -165,6 +196,7 @@ const WorkQueue = ({ navigate: _navigate }: WorkQueueProps) => {
                     </div>
                   ) : (
                     <span
+                      id={`task-assignee-${task.id}`}
                       className={task.assignedTo === 'Unassigned' ? 'text-muted-foreground italic' : ''}
                     >
                       {task.assignedTo}
@@ -172,24 +204,34 @@ const WorkQueue = ({ navigate: _navigate }: WorkQueueProps) => {
                   )}
                 </td>
                 <td className="px-4 py-3">
-                  <Badge variant={priorityVariant(task.priority)}>{task.priority}</Badge>
+                  <Badge
+                    id={`task-priority-badge-${task.id}`}
+                    aria-label={`Priority: ${task.priority}`}
+                    variant={priorityVariant(task.priority)}
+                  >
+                    {task.priority}
+                  </Badge>
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">{task.dueDate}</td>
                 <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
+                  <div id={`task-actions-${task.id}`} className="flex items-center gap-2">
                     {task.status !== 'Resolved' && (
                       <>
                         <Button
-                          variant="ghost"
-                          size="sm"
+                          id={`task-assign-btn-${task.id}`}
+                          aria-label={`Assign task ${task.id}`}
+                          data-testid={`task-assign-btn-${task.id}`}
+                          variant="ghost" size="sm"
                           className="h-7 text-xs text-portal-blue hover:text-portal-blue"
                           onClick={() => setAssigning(assigning === task.id ? null : task.id)}
                         >
                           Assign
                         </Button>
                         <Button
-                          variant="ghost"
-                          size="sm"
+                          id={`task-resolve-btn-${task.id}`}
+                          aria-label={`Resolve task ${task.id}`}
+                          data-testid={`task-resolve-btn-${task.id}`}
+                          variant="ghost" size="sm"
                           className="h-7 text-xs text-portal-green hover:text-portal-green"
                           onClick={() => resolve(task.id)}
                         >
@@ -198,7 +240,7 @@ const WorkQueue = ({ navigate: _navigate }: WorkQueueProps) => {
                       </>
                     )}
                     {task.status === 'Resolved' && (
-                      <span className="text-xs text-muted-foreground italic">Closed</span>
+                      <span id={`task-closed-label-${task.id}`} className="text-xs text-muted-foreground italic">Closed</span>
                     )}
                   </div>
                 </td>

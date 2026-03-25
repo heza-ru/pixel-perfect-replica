@@ -27,10 +27,15 @@ const MemberProfile = ({ memberId, navigate }: MemberProfileProps) => {
 
   if (!member) {
     return (
-      <div className="p-6">
+      <div id="member-profile-not-found" className="p-6">
         <div className="bg-white rounded border border-border p-8 text-center">
           <p className="text-muted-foreground mb-4">Member not found: {memberId}</p>
-          <Button variant="outline" onClick={() => navigate('members')}>
+          <Button
+            id="profile-not-found-back-btn"
+            aria-label="Back to Member Portal"
+            variant="outline"
+            onClick={() => navigate('members')}
+          >
             <ArrowLeft size={14} className="mr-1.5" /> Back to Member Portal
           </Button>
         </div>
@@ -46,47 +51,51 @@ const MemberProfile = ({ memberId, navigate }: MemberProfileProps) => {
   const latestBalance = member.contributions[member.contributions.length - 1]?.ytdBalance ?? 0;
 
   return (
-    <div className="p-6">
+    <div id={`member-profile-page-${member.id}`} data-testid="member-profile-page" className="p-6">
+
       {/* Back navigation */}
       <button
+        id="profile-back-btn"
+        aria-label="Back to Member Portal"
         onClick={() => navigate('members')}
         className="flex items-center gap-1.5 text-sm text-portal-blue hover:underline mb-4"
       >
-        <ArrowLeft size={14} /> Member Portal
+        <ArrowLeft size={14} aria-hidden="true" /> Member Portal
       </button>
 
       {/* Member header card */}
-      <div className="bg-white rounded border border-border p-5 mb-5">
+      <div id="profile-header-card" aria-label={`Profile header for ${member.name}`} className="bg-white rounded border border-border p-5 mb-5">
         <div className="flex items-start gap-5">
-          <div className="w-16 h-16 rounded-full bg-portal-blue flex items-center justify-center text-white text-xl font-bold flex-shrink-0">
+          <div
+            id={`profile-avatar-${member.id}`}
+            aria-label={`Avatar for ${member.name}`}
+            className="w-16 h-16 rounded-full bg-portal-blue flex items-center justify-center text-white text-xl font-bold flex-shrink-0"
+          >
             {initials}
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-1">
-              <h1 className="text-xl font-semibold text-foreground">{member.name}</h1>
-              <Badge variant={statusVariant(member.status)}>{member.status}</Badge>
+              <h1 id="profile-member-name" className="text-xl font-semibold text-foreground">{member.name}</h1>
+              <Badge
+                id={`profile-status-badge-${member.id}`}
+                aria-label={`Member status: ${member.status}`}
+                variant={statusVariant(member.status)}
+              >
+                {member.status}
+              </Badge>
             </div>
-            <div className="grid grid-cols-4 gap-4 text-sm mt-3">
-              <div>
-                <span className="text-xs text-muted-foreground block">Member ID</span>
-                <span className="font-mono font-medium">{member.id}</span>
-              </div>
-              <div>
-                <span className="text-xs text-muted-foreground block">Plan Type</span>
-                <span className="font-medium">{member.planType}</span>
-              </div>
-              <div>
-                <span className="text-xs text-muted-foreground block">Employer</span>
-                <span className="font-medium">{member.employer}</span>
-              </div>
-              <div>
-                <span className="text-xs text-muted-foreground block">Years of Service</span>
-                <span className="font-medium">{member.yearsOfService} years</span>
-              </div>
+            <div id="profile-meta-grid" className="grid grid-cols-4 gap-4 text-sm mt-3">
+              <InfoField id="profile-member-id" label="Member ID" value={member.id} />
+              <InfoField id="profile-plan-type" label="Plan Type" value={member.planType} />
+              <InfoField id="profile-employer" label="Employer" value={member.employer} />
+              <InfoField id="profile-years-service" label="Years of Service" value={`${member.yearsOfService} years`} />
             </div>
           </div>
-          <div className="flex gap-2 flex-shrink-0">
+          <div id="profile-action-buttons" className="flex gap-2 flex-shrink-0">
             <Button
+              id={`profile-apply-refund-btn-${member.id}`}
+              aria-label={`Apply for refund for ${member.name}`}
+              data-testid="profile-apply-refund-btn"
               size="sm"
               variant="outline"
               className="border-portal-blue text-portal-blue hover:bg-portal-blue hover:text-white"
@@ -95,6 +104,9 @@ const MemberProfile = ({ memberId, navigate }: MemberProfileProps) => {
               Apply for Refund
             </Button>
             <Button
+              id={`profile-start-retirement-btn-${member.id}`}
+              aria-label={`Start retirement application for ${member.name}`}
+              data-testid="profile-start-retirement-btn"
               size="sm"
               onClick={() => navigate('retirement-flow', member.id)}
             >
@@ -105,60 +117,61 @@ const MemberProfile = ({ memberId, navigate }: MemberProfileProps) => {
       </div>
 
       {/* Tabs */}
-      <Tabs defaultValue="personal">
-        <TabsList className="mb-4">
-          <TabsTrigger value="personal">Personal Information</TabsTrigger>
-          <TabsTrigger value="contributions">Contribution Summary</TabsTrigger>
-          <TabsTrigger value="bank">Bank Details</TabsTrigger>
-          <TabsTrigger value="history">Application History</TabsTrigger>
+      <Tabs id="profile-tabs" defaultValue="personal">
+        <TabsList id="profile-tabs-list" className="mb-4">
+          <TabsTrigger id="tab-personal" value="personal" aria-label="Personal Information tab">Personal Information</TabsTrigger>
+          <TabsTrigger id="tab-contributions" value="contributions" aria-label="Contribution Summary tab">Contribution Summary</TabsTrigger>
+          <TabsTrigger id="tab-bank" value="bank" aria-label="Bank Details tab">Bank Details</TabsTrigger>
+          <TabsTrigger id="tab-history" value="history" aria-label="Application History tab">Application History</TabsTrigger>
         </TabsList>
 
         {/* Personal Information */}
-        <TabsContent value="personal">
-          <div className="bg-white rounded border border-border p-5">
+        <TabsContent id="tab-content-personal" value="personal">
+          <div id="personal-info-section" className="bg-white rounded border border-border p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold">Personal Information</h2>
-              <Button variant="ghost" size="sm" className="h-7 text-xs">
-                <Edit size={12} className="mr-1.5" /> Edit
+              <Button
+                id="personal-info-edit-btn"
+                aria-label="Edit personal information"
+                variant="ghost" size="sm" className="h-7 text-xs"
+              >
+                <Edit size={12} className="mr-1.5" aria-hidden="true" /> Edit
               </Button>
             </div>
-            <div className="grid grid-cols-2 gap-5">
-              <InfoField label="Date of Birth" value={member.dob} />
-              <InfoField label="Social Security Number" value={member.ssn} />
-              <InfoField label="Phone Number" value={member.phone} />
-              <InfoField label="Email Address" value={member.email} />
+            <div id="personal-info-grid" className="grid grid-cols-2 gap-5">
+              <InfoField id="personal-dob" label="Date of Birth" value={member.dob} />
+              <InfoField id="personal-ssn" label="Social Security Number" value={member.ssn} />
+              <InfoField id="personal-phone" label="Phone Number" value={member.phone} />
+              <InfoField id="personal-email" label="Email Address" value={member.email} />
               <InfoField
+                id="personal-address"
                 label="Mailing Address"
                 value={`${member.address}, ${member.city}, ${member.state} ${member.zip}`}
               />
-              <InfoField label="Member Since" value={member.joinDate} />
+              <InfoField id="personal-since" label="Member Since" value={member.joinDate} />
             </div>
           </div>
         </TabsContent>
 
         {/* Contribution Summary */}
-        <TabsContent value="contributions">
-          <div className="bg-white rounded border border-border p-5">
+        <TabsContent id="tab-content-contributions" value="contributions">
+          <div id="contributions-section" className="bg-white rounded border border-border p-5">
             <h2 className="text-sm font-semibold mb-4">Contribution Summary</h2>
-
-            {/* Stats row */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <div className="bg-muted/50 rounded p-3 text-center">
+            <div id="contributions-stats-row" className="grid grid-cols-3 gap-4 mb-6">
+              <div id="stat-total-employee" className="bg-muted/50 rounded p-3 text-center">
                 <div className="text-xs text-muted-foreground mb-1">Total Employee Contributions</div>
                 <div className="text-lg font-bold text-portal-blue">${totalContributions.employee.toLocaleString()}</div>
               </div>
-              <div className="bg-muted/50 rounded p-3 text-center">
+              <div id="stat-total-employer" className="bg-muted/50 rounded p-3 text-center">
                 <div className="text-xs text-muted-foreground mb-1">Total Employer Contributions</div>
                 <div className="text-lg font-bold text-portal-green">${totalContributions.employer.toLocaleString()}</div>
               </div>
-              <div className="bg-muted/50 rounded p-3 text-center">
+              <div id="stat-ytd-balance" className="bg-muted/50 rounded p-3 text-center">
                 <div className="text-xs text-muted-foreground mb-1">Current YTD Balance</div>
                 <div className="text-lg font-bold text-portal-teal">${latestBalance.toLocaleString()}</div>
               </div>
             </div>
-
-            {/* Chart */}
-            <div className="mb-5">
+            <div id="contributions-chart">
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={member.contributions} barSize={24}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -171,20 +184,18 @@ const MemberProfile = ({ memberId, navigate }: MemberProfileProps) => {
                 </BarChart>
               </ResponsiveContainer>
             </div>
-
-            {/* Table */}
-            <table className="w-full text-sm">
+            <table id="contributions-table" role="table" aria-label="Yearly contributions breakdown" className="w-full text-sm mt-5">
               <thead>
                 <tr className="bg-muted/50 border-b">
-                  <th className="text-left px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Year</th>
-                  <th className="text-right px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Employee</th>
-                  <th className="text-right px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Employer</th>
-                  <th className="text-right px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">YTD Balance</th>
+                  <th scope="col" className="text-left px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Year</th>
+                  <th scope="col" className="text-right px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Employee</th>
+                  <th scope="col" className="text-right px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Employer</th>
+                  <th scope="col" className="text-right px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">YTD Balance</th>
                 </tr>
               </thead>
               <tbody>
                 {member.contributions.map((c) => (
-                  <tr key={c.year} className="border-b">
+                  <tr key={c.year} id={`contribution-row-${member.id}-${c.year}`} className="border-b">
                     <td className="px-3 py-2">{c.year}</td>
                     <td className="px-3 py-2 text-right">${c.employee.toLocaleString()}</td>
                     <td className="px-3 py-2 text-right">${c.employer.toLocaleString()}</td>
@@ -197,68 +208,92 @@ const MemberProfile = ({ memberId, navigate }: MemberProfileProps) => {
         </TabsContent>
 
         {/* Bank Details */}
-        <TabsContent value="bank">
-          <div className="bg-white rounded border border-border p-5">
+        <TabsContent id="tab-content-bank" value="bank">
+          <div id="bank-details-section" className="bg-white rounded border border-border p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-sm font-semibold">Bank Details</h2>
-              <Button variant="ghost" size="sm" className="h-7 text-xs">
-                <Edit size={12} className="mr-1.5" /> Update Bank Details
+              <Button
+                id={`bank-update-btn-${member.id}`}
+                aria-label="Update bank details"
+                variant="ghost" size="sm" className="h-7 text-xs"
+              >
+                <Edit size={12} className="mr-1.5" aria-hidden="true" /> Update Bank Details
               </Button>
             </div>
-            <div className="bg-muted/30 rounded border border-border p-4 max-w-md">
+            <div id="bank-details-card" aria-label={`Bank account: ${member.bank.name}`} className="bg-muted/30 rounded border border-border p-4 max-w-md">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded bg-portal-blue/10 flex items-center justify-center">
+                <div id="bank-logo" aria-hidden="true" className="w-10 h-10 rounded bg-portal-blue/10 flex items-center justify-center">
                   <span className="text-portal-blue font-bold text-xs">BANK</span>
                 </div>
                 <div>
-                  <div className="font-semibold">{member.bank.name}</div>
+                  <div id="bank-name" className="font-semibold">{member.bank.name}</div>
                   <div className="text-xs text-muted-foreground">Primary Account</div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <InfoField label="Account Number" value={member.bank.accountMasked} />
-                <InfoField label="Routing Number" value={member.bank.routing} />
+                <InfoField id="bank-account-number" label="Account Number" value={member.bank.accountMasked} />
+                <InfoField id="bank-routing-number" label="Routing Number" value={member.bank.routing} />
               </div>
               <div className="mt-3 pt-3 border-t">
                 <span className="text-xs text-muted-foreground">Account Type: </span>
-                <span className="text-xs font-medium">Checking — Direct Deposit</span>
+                <span id="bank-account-type" className="text-xs font-medium">Checking — Direct Deposit</span>
               </div>
             </div>
           </div>
         </TabsContent>
 
         {/* Application History */}
-        <TabsContent value="history">
-          <div className="bg-white rounded border border-border overflow-hidden">
+        <TabsContent id="tab-content-history" value="history">
+          <div id="application-history-section" className="bg-white rounded border border-border overflow-hidden">
             <div className="px-4 py-3 border-b">
               <h2 className="text-sm font-semibold">Application History</h2>
             </div>
             {member.applications.length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground text-sm">
+              <div id="application-history-empty" className="p-8 text-center text-muted-foreground text-sm">
                 No applications on record for this member.
               </div>
             ) : (
-              <table className="w-full text-sm">
+              <table id="application-history-table" role="table" aria-label="Application history" className="w-full text-sm">
                 <thead>
                   <tr className="bg-muted/50 border-b">
-                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Application ID</th>
-                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Type</th>
-                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Submitted Date</th>
-                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</th>
-                    <th className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Action</th>
+                    <th scope="col" className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Application ID</th>
+                    <th scope="col" className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Type</th>
+                    <th scope="col" className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Submitted Date</th>
+                    <th scope="col" className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</th>
+                    <th scope="col" className="text-left px-4 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   {member.applications.map((app) => (
-                    <tr key={app.id} className="border-b hover:bg-muted/20">
+                    <tr
+                      key={app.id}
+                      id={`app-history-row-${app.id}`}
+                      data-testid={`app-history-row-${app.id}`}
+                      className="border-b hover:bg-muted/20"
+                    >
                       <td className="px-4 py-3 font-mono text-xs">{app.id}</td>
                       <td className="px-4 py-3">{app.type}</td>
                       <td className="px-4 py-3 text-muted-foreground">{app.submittedDate}</td>
                       <td className="px-4 py-3">
-                        <Badge variant={statusVariant(app.status)}>{app.status}</Badge>
+                        <Badge
+                          id={`app-status-badge-${app.id}`}
+                          aria-label={`Application status: ${app.status}`}
+                          variant={statusVariant(app.status)}
+                        >
+                          {app.status}
+                        </Badge>
                       </td>
                       <td className="px-4 py-3">
-                        <Button variant="ghost" size="sm" className="h-7 text-xs text-portal-blue hover:text-portal-blue">
+                        <Button
+                          id={`app-view-btn-${app.id}`}
+                          aria-label={`View application ${app.id}`}
+                          variant="ghost" size="sm"
+                          className="h-7 text-xs text-portal-blue hover:text-portal-blue"
+                          onClick={() => {
+                            if (app.type === 'Refund') navigate('refund-flow', member.id);
+                            else if (app.type === 'Retirement') navigate('retirement-flow', member.id);
+                          }}
+                        >
                           View
                         </Button>
                       </td>
@@ -274,8 +309,8 @@ const MemberProfile = ({ memberId, navigate }: MemberProfileProps) => {
   );
 };
 
-const InfoField = ({ label, value }: { label: string; value: string }) => (
-  <div>
+const InfoField = ({ id, label, value }: { id: string; label: string; value: string }) => (
+  <div id={id}>
     <span className="text-xs text-muted-foreground block mb-0.5">{label}</span>
     <span className="text-sm font-medium">{value}</span>
   </div>
